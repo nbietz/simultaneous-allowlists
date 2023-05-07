@@ -22,7 +22,7 @@ export default function Home() {
     setLoading(true);
     console.log("claim() contract:", contract);
     try {
-      const tx = await contract.claim(1);
+      const tx = await contract.erc721.claim(1);
       console.log("claim() tx:", tx);
       alert(`Succesfully minted NFT!`);
     } catch (error) {
@@ -40,7 +40,6 @@ export default function Home() {
         address: address,
       }),
     });
-
     console.log("signedPayloadRes", signedPayloadRes);
 
     if (signedPayloadRes.status === 400) {
@@ -53,10 +52,13 @@ export default function Home() {
         const signedPayload = await signedPayloadRes.json();
         console.log("signedPayload", signedPayload);
 
-        // Provide the generated payload to verify that it is valid
-        const isValid = await contract.signature.verify(signedPayload);
+        console.log("contract", contract);
+
+        const isValid = await contract.erc721.signature.verify(signedPayload);
         console.log("isValid", isValid);
-        const tx = await contract.signature.mint(signedPayload);
+        const prep = await contract.erc721.signature.mint.prepare(signedPayload);
+        console.log("prep", prep);
+        const tx = await contract.erc721.signature.mint(signedPayload);
         console.log("tx", tx);
         const receipt = tx.receipt; // the mint transaction receipt
         console.log("receipt", receipt);

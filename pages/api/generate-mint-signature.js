@@ -67,12 +67,10 @@ const handler = async (req, res) => {
   console.log("payload: ", payload);
 
   try {
-    const signedPayload = await contract.erc721.signature.generate(payload);
+    const signedPayload = await contract.signature.generate(payload);
     console.log("signedPayload: ", signedPayload);
 
-    return res.status(200).json({
-      signedPayload: signedPayload,
-    });
+    return res.status(200).json(signedPayload);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
